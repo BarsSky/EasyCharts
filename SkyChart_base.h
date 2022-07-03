@@ -8,7 +8,7 @@
 
 struct Base2DChart: public QWidget{
 public:
-    //создаем график и заполняем его данными
+
     Base2DChart(QWidget* parent = nullptr){
         Q_UNUSED(parent);
         m_chart = new QChart();
@@ -65,13 +65,13 @@ public:
     void addAsixsToChart()
     {
         removeAxisDekart();
-        //формируем новые оси
+        //create neww axis
         axisX = new QValueAxis(m_chart);
         axisY = new QValueAxis(m_chart);
-        //добавляем на график
+        //add on chart
         m_chart->addAxis(axisX, Qt::AlignBottom);
         m_chart->addAxis(axisY, Qt::AlignLeft);
-        //задаём диапазон значений на осях графика
+        //set range to axis
         axisY->setRange(m_axisMinY, m_axisMaxY);
         axisX->setRange(m_axisMinX, m_axisMaxX);
         m_lineSeries->attachAxis(axisX);
@@ -88,21 +88,21 @@ public:
     }
 
     void axisPreference(){
-        //общие настройки осей
+        //basic settings
         axisX->setLabelsFont(fontType);
         axisX->setTitleFont(fontType);
         axisX->setTitleText(m_axisXName);
         axisX->setMinorTickCount(m_verticalInterval);
-        //X->applyNiceNumbers();//функция красивых номеров по умолчанию от qt
-        //X->setLabelsEditable(true);//меняем значения по своему умотрению, работает только для одного графика
+        axisX->applyNiceNumbers();
+        axisX->setLabelsEditable(true);//
         axisY->setLabelsFont(fontType);
         axisY->setTitleFont(fontType);
         axisY->setTitleText(m_axisYName);
         axisY->setMinorTickCount(m_horizontalInterval);
-        //Y->applyNiceNumbers();
-        //Y->setLabelsEditable(true);
+        axisY->applyNiceNumbers();
+        axisY->setLabelsEditable(true);
 #if (QT_VERSION >= QT_VERSION_CHECK(5,14,0))
-        //по вертикальной оси
+        //vertical
         if (!statDynamFlagV)
         {
             axisX->setLabelsVisible(true);
@@ -116,7 +116,7 @@ public:
             axisX->setLabelFormat("%." + QString::number(m_axisStepX) + "f");
         }
 
-        //по горизонтальной оси
+        //horizontal
         if (!statDynamFlagH) {
             axisY->setLabelsVisible(true);
             axisY->setTickInterval(tickIntervalH);
@@ -138,10 +138,10 @@ public:
 
     void updateAxis(QPointF _min, QPointF _max){
         QList<QAbstractAxis*> _axes = m_chart->axes(Qt::Vertical);
-        for(auto ax : _axes)
+        for(auto ax : qAsConst(_axes))
             ax->setRange(_min.y(), _max.y());
         _axes = m_chart->axes(Qt::Horizontal);
-        for(auto ax : _axes)
+        for(auto ax : qAsConst(_axes))
             ax->setRange(_min.x(), _max.x());
     }
     //Special function
@@ -163,13 +163,12 @@ public:
     }
 
     void dynamicGrid(){
-        double step;//число возводимое в степень
+        double step;
         double value;
         int gridNum = 5;
         //
         value = m_axisMaxX - m_axisMinX;
-        step = value / gridNum;//установим шаг сетки в 10
-        //переводим в формат со степенью
+        step = value / gridNum;//
         QString str = QString("%1").arg(step, 0, 'E', 3);
         QString strVal = str.left(str.indexOf('E'));
         QString strExp = str.right(str.indexOf('E') - 2);
@@ -180,8 +179,7 @@ public:
         tickIntervalV = step * pow(10, strExp.toInt());
         //
         value = m_axisMaxY - m_axisMinY;
-        step = value / gridNum;//установим шаг сетки в 10
-        //переводим в формат со степенью
+        step = value / gridNum;
         str = QString("%1").arg(step, 0, 'E', 3);
         strVal = str.left(str.indexOf('E'));
         strExp = str.right(str.indexOf('E') - 2);
@@ -201,7 +199,7 @@ public:
             x.emplace_back(point.x());
             y.emplace_back(point.y());
         }
-        //функция расчета минимума максимума для крайних значений осей
+
         auto minmaxX = std::minmax_element(x.begin(), x.end());
         auto minmaxY = std::minmax_element(y.begin(), y.end());
 
@@ -240,7 +238,6 @@ public:
 
     QColor sequenceColor()
     {
-        //последовательный цвет для графиков
         QColor color;
         if(m_colorsVector.size() == 0){
             m_colorsVector.emplace_back("black");
@@ -376,9 +373,6 @@ private:
     QString m_axisXName = "X",m_axisYName = "Y";
     //
     std::list<QString> m_LinesNames;
-    //max point size
-    unsigned int xPointSize;
-    unsigned int yPointSize;
     //chart points
     QList<QPointF> m_chartPoints;
     //

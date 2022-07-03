@@ -45,10 +45,9 @@ void SkyChart_base::resizeEvent(QResizeEvent *event)
 #ifndef QT_NO_WHEELEVENT
 void SkyChart_base::wheelEvent(QWheelEvent *event)
 {
-    //увеличение по колесику мыши
-    if (event->delta() > 0)
+    if (event->angleDelta().y() > 0)
         baseChart->getChart()->zoomIn();
-    else
+    if (event->angleDelta().y() < 0)
         baseChart->getChart()->zoomOut();
     event->accept();
     QGraphicsView::wheelEvent(event);

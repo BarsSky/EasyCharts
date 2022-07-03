@@ -20,15 +20,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//void MainWindow::dropEvent(QDropEvent *event)
-//{
-//    const QMimeData* _data = event->mimeData();
-//    if(_data){
-//          FileParser* _parser = new FileParser();
-//          _parser->openFile();
-//    }
-//}
-
 void createGraf(std::vector<float> *_x, std::vector<float> *_y){
     _x->emplace_back();
     _y->emplace_back();
@@ -55,7 +46,7 @@ bool MainWindow::initialaze()
     //
     _chartArray.emplace_back(sky_chart);
     _chartArray.emplace_back(sky_chart2);
-    //добавляем график туда куда требуется
+    //add chart
     ChartsDock* _chDock = new ChartsDock();
     _chDock->addWidgetsToDock(_chartArray,text);
     ui->gridLayout->addWidget(_chDock,0,0);
@@ -71,8 +62,6 @@ void MainWindow::makeCharts(FileParser* _parser)
         _chartArray.emplace_back(sky_chart);
     }
     ChartsDock* _chDock = new ChartsDock();
-    std::vector<QString> text;
-    //    text.resize(_chartArray.size(),"Graph");
     _chDock->addWidgetsToDock(_chartArray,_parser->getXNames());
     ui->gridLayout->addWidget(_chDock,0,0);
 }

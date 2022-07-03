@@ -24,13 +24,6 @@ public:
 private:
     QString fileName;
     void parse();
-    void coordFile(QString line);
-    void rrFile(QString line);
-    void delFile(QString line);
-    void sokFile(QString line);
-    void vixFile(QString line);
-    void MassaFile(QString line);
-    void hFile(QString line);
     void parseAnyFile(QString line, QString _name);
 
     std::vector<std::vector<float>> x,y,z;
